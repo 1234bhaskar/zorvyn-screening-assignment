@@ -23,3 +23,9 @@ export const loginUserSchema = z.object({
 
 export type CreateNewUserInput = z.infer<typeof createNewUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
+
+export const updateStatusSchema = z.object({
+    status: z.enum(["active", "inactive"], "Status must be active or inactive")
+});
+
+export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;

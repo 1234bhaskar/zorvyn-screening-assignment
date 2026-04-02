@@ -7,6 +7,7 @@ import { createUser } from "../repositories/user.repository.js";
 import { comparePassword } from "../utils/password.js";
 import { generateAccessToken } from "../utils/jwt.js";
 import type { LoginUserInput } from "../validators/user/user.validator.js";
+import { UserResponseDto } from "../dto/user.dto.js";
 
 export const registerationService = async (data: CreateNewUserInput) => {
     const isExistingUser = await findUserByEmail(data.email);
@@ -27,10 +28,10 @@ export const loginUserService = async (data: LoginUserInput) => {
     if (!user) {
         throw new UnauthorizedError("Invalid credentials");
     }
-    const isPasswordValid = await comparePassword(data.password, user.password);
+    const isPasswordValid = await comparePassword(data.password, user.users_table.password);
     if (!isPasswordValid) {
         throw new UnauthorizedError("Invalid credentials");
     }
-    const token = generateAccessToken({ id: user.id, email: user.email });
-    return { user, token };
+    const token = generateAccessToken({ id: user.users_table.id, email: user.users_table.email, role: user.roles_table?.name ?? "" });
+    return { user: UserResponseDto.fromUser(user), token };
 }
