@@ -15,6 +15,18 @@ export async function getUser(uuid: string) {
     }
 }
 
+export async function getUserById(id: number) {
+    try {
+        const [user] = await db.select()
+            .from(Users)
+            .where(eq(Users.id, id));
+        return user;
+    } catch (error) {
+        console.log("Error fetching user details", error);
+        throw error;
+    }
+}
+
 export async function userProfile(id: number) {
     try {
         const [user] = await db.select()

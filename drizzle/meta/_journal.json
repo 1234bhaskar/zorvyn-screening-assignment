@@ -15,6 +15,13 @@
       "when": 1775167473836,
       "tag": "0001_empty_wolverine",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775221243931,
+      "tag": "0002_ambitious_phantom_reporter",
+      "breakpoints": true
     }
   ]
 }

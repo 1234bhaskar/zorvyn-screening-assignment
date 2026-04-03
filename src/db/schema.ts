@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, integer, numeric, pgEnum, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const Roles = pgTable('roles_table', {
     id: serial('id').primaryKey(),
@@ -19,6 +19,32 @@ export const Users = pgTable('users_table', {
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const recordTypeEnum = pgEnum("record_type", ["income", "expense"]);
+
+export const recordCategoryEnum = pgEnum("record_category", [
+    "salary",
+    "rent",
+    "food",
+    "utilities",
+    "healthcare",
+    "transportation",
+    "entertainment",
+    "bills",
+    "investment",
+    "other"
+]);
+export const Records = pgTable('records', {
+    id: serial("id").primaryKey(),
+    amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+    type: recordTypeEnum("type").notNull(),
+    category: recordCategoryEnum("category").notNull(),
+    date: timestamp("date").notNull(),
+    notes: text("notes"),
+    userId: integer("user_id").notNull(),
+    deletedAt: timestamp("deleted_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
 
 export type InsertUser = typeof Users.$inferInsert;
 export type SelectUser = typeof Users.$inferSelect;
