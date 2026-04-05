@@ -2,6 +2,7 @@ import { db } from "../db/index.db.js";
 import { Users, Roles } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 import type { CreateNewUserInput } from "../validators/user/user.validator.js";
+import { NotFoundError } from "../utils/errors/app.error.js";
 
 export async function getUser(uuid: string) {
     try {
@@ -86,6 +87,24 @@ export const updateUserStatus = async (id: number, status: boolean): Promise<boo
         return true;
     } catch (error) {
         console.log("Error updating user status", error);
+        throw error;
+    }
+}
+
+
+export const AssignRole = async (uuid: string, roleId: number) => {
+    try {
+        const [userRecord] = await db
+            .update(Users)
+            .set({ role: roleId })
+            .where(eq(Users.uuid, uuid))
+            .returning();
+        if (!userRecord) {
+            throw new NotFoundError("User not found");
+        }
+        return userRecord;
+    } catch (error) {
+        console.log("Error assigning role", error);
         throw error;
     }
 }

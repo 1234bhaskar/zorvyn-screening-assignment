@@ -10,7 +10,6 @@ export const createNewUserSchema = z.object({
         .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
             "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
         .max(20, "Password must be at most 20 characters long"),
-    role: z.enum([ROLES.Analyst, ROLES.Viewer]).default(ROLES.Viewer)
 });
 
 export const loginUserSchema = z.object({

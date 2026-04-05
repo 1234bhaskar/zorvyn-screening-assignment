@@ -8,3 +8,10 @@ export const createNewRoleSchema = z.object({
 });
 
 export type CreateNewRoleInput = z.infer<typeof createNewRoleSchema>;
+
+export const assignRoleSchema = z.object({
+    role: z.enum(["admin", "analyst", "viewer"])
+});
+
+export type AssignRoleInput = z.infer<typeof assignRoleSchema>;
+

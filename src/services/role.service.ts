@@ -1,7 +1,8 @@
 import { ConflictError, NotFoundError } from "../utils/errors/app.error.js";
-import { createRole, getRole } from "../repositories/role.repository.js";
+import { createRole, getAllRoles, getRole } from "../repositories/role.repository.js";
 import type { CreateRoleInput } from "../interface/role.interface.js";
 import { sanitizeString } from "../utils/string.js";
+import type { Role } from "../constant/role.js";
 
 export const addNewRoleService = async (data: CreateRoleInput) => {
     const sanitizedName = sanitizeString(data.name);
@@ -13,11 +14,16 @@ export const addNewRoleService = async (data: CreateRoleInput) => {
     return role;
 }
 
-// const getUserService = async (uuid: string) => {
-//     const user = await getUserDetails(uuid);
-//     if (!user) {
-//         throw new NotFoundError("User not found");
-//     }
-//     return user;
-// }
+export const getAllRolesService = async () => {
+    const roles = await getAllRoles();
+    return roles;
+}
+
+export const getRoleService = async (roleName: Role) => {
+    const role = await getRole(roleName);
+    if (!role) {
+        throw new NotFoundError("Role not found");
+    }
+    return role;
+}
 

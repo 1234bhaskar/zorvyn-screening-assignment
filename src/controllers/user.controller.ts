@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { showUserProfile, updateStatusService } from "../services/user.service.js";
+import { AssignRoleService, showUserProfile, updateStatusService } from "../services/user.service.js";
 
 export const profile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -21,6 +21,19 @@ export const updateStatus = async (req: Request, res: Response, next: NextFuncti
         res.status(200).json({
             success: true,
             message: `User ${req.body.status} successfully`,
+            data: result
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const assignRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const result = await AssignRoleService(String(req.params.uuid), req.body.role);
+        res.status(200).json({
+            success: true,
+            message: "Role assigned successfully",
             data: result
         });
     } catch (error) {

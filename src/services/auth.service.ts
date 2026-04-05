@@ -8,13 +8,14 @@ import { comparePassword } from "../utils/password.js";
 import { generateAccessToken } from "../utils/jwt.js";
 import type { LoginUserInput } from "../validators/user/user.validator.js";
 import { UserResponseDto } from "../dto/user.dto.js";
+import { ROLES } from "../constant/role.js";
 
 export const registerationService = async (data: CreateNewUserInput) => {
     const isExistingUser = await findUserByEmail(data.email);
     if (isExistingUser) {
         throw new NotFoundError("User with this email already exists");
     }
-    const isRoleExist = await getRole(data.role);
+    const isRoleExist = await getRole(ROLES.Viewer);
     if (!isRoleExist) {
         throw new NotFoundError("Role not found");
     }
