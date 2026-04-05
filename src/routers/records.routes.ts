@@ -8,19 +8,19 @@ import { all, create, update, deleteRecord } from "../controllers/records.contro
 const recordRouter = express.Router();
 recordRouter.post('/',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole("admin"),
     validateRequestBody(createNewRecordSchema),
     create);
 
 recordRouter.put('/:id',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole("admin"),
     validateRequestBody(updateRecordSchema),
     update);
 
 recordRouter.delete('/:id',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole("admin"),
     deleteRecord);
 
 recordRouter.get('/',

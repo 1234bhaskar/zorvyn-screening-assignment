@@ -1,5 +1,5 @@
 import express from "express"
-import { isAuthenticated } from "../middlewares/auth.middleware.js";
+import { hasRole, isAuthenticated } from "../middlewares/auth.middleware.js";
 import {
     summary,
     categoryTotals,
@@ -11,10 +11,25 @@ import {
 const dashboardRouter = express.Router();
 
 
-dashboardRouter.get('/summary', isAuthenticated, summary)
-dashboardRouter.get('/category', isAuthenticated, categoryTotals)
-dashboardRouter.get('/recent', isAuthenticated, recentActivity)
-dashboardRouter.get('/weekly-trends', weeklyTrends)
+dashboardRouter.get('/summary',
+    isAuthenticated,
+    hasRole("admin", "analyst", "viewer"),
+    summary)
+
+dashboardRouter.get('/category',
+    isAuthenticated,
+    hasRole("admin", "analyst", "viewer"),
+    categoryTotals)
+
+dashboardRouter.get('/recent',
+    isAuthenticated,
+    hasRole("admin", "analyst", "viewer"),
+    recentActivity)
+
+dashboardRouter.get('/weekly-trends',
+    isAuthenticated,
+    hasRole("admin", "analyst", "viewer"),
+    weeklyTrends)
 
 
 export { dashboardRouter };
