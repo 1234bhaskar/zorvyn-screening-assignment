@@ -12,7 +12,7 @@ export async function createRecord(data: CreateNewRecordInput, userId: number) {
                 amount: data.amount.toString(),
                 type: data.type,
                 category: data.category,
-                date: data.date.toISOString(),
+                date: data.date.toString(),
                 notes: data.notes,
                 userId,
             })
