@@ -3,8 +3,7 @@ import { validateRequestBody } from "../validators/index.js";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import { hasRole } from "../middlewares/auth.middleware.js";
 import { createNewRecordSchema, updateRecordSchema } from "../validators/records.validator.js";
-import { all, create, update } from "../controllers/records.controller.js";
-import { deleteRecord } from "../repositories/records.repository.js";
+import { all, create, update, deleteRecord } from "../controllers/records.controller.js";
 
 const recordRouter = express.Router();
 recordRouter.post('/',

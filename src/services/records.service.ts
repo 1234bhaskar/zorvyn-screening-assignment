@@ -19,11 +19,15 @@ export const updateRecordService = async (id: number, data: UpdateRecordInput) =
 
 
 export const deleteRecordService = async (id: number) => {
+    const record = await getRecordById(id);
+    if (!record) {
+        throw new NotFoundError("Record not found");
+    }
     const deletedRecord = await deleteRecord(id);
     return deletedRecord;
 }
 
-export const getAllRecordsService = async (userId: number) => {
-    const record = await getAllRecords(userId);
+export const getAllRecordsService = async () => {
+    const record = await getAllRecords();
     return record;
 }

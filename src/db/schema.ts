@@ -1,4 +1,4 @@
-import { boolean, integer, numeric, pgEnum, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, date, integer, numeric, pgEnum, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const Roles = pgTable('roles_table', {
     id: serial('id').primaryKey(),
@@ -38,7 +38,7 @@ export const Records = pgTable('records', {
     amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
     type: recordTypeEnum("type").notNull(),
     category: recordCategoryEnum("category").notNull(),
-    date: timestamp("date").notNull(),
+    date: date("date").notNull(),
     notes: text("notes"),
     userId: integer("user_id").notNull(),
     deletedAt: timestamp("deleted_at"),

@@ -10,3 +10,10 @@ export enum RecordCategory {
     INVESTMENT = "investment",
     OTHER = "other"
 }
+
+export const RecordType = {
+    INCOME: "income",
+    EXPENSE: "expense"
+} as const;
+
+export type RecordType = typeof RecordType[keyof typeof RecordType];

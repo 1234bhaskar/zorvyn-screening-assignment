@@ -1,6 +1,6 @@
 import { db } from "../db/index.db.js";
 import { Users, Roles, Records } from "../db/schema.js";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { CreateNewRecordInput, UpdateRecordInput } from "../validators/records.validator.js";
 import { ConflictError, NotFoundError } from "../utils/errors/app.error.js";
 
@@ -12,7 +12,7 @@ export async function createRecord(data: CreateNewRecordInput, userId: number) {
                 amount: data.amount.toString(),
                 type: data.type,
                 category: data.category,
-                date: data.date,
+                date: data.date.toISOString(),
                 notes: data.notes,
                 userId,
             })
@@ -30,12 +30,12 @@ export async function createRecord(data: CreateNewRecordInput, userId: number) {
 }
 
 
-export async function getAllRecords(userId: number) {
+export async function getAllRecords() {
     try {
-        const [financialRecord] = await db
+        const financialRecord = await db
             .select()
             .from(Records)
-            .where(eq(Records.userId, userId));
+            .where(isNull(Records.deletedAt));
         return financialRecord;
     } catch (error) {
         console.log("Error fetching records", error);
@@ -48,7 +48,7 @@ export async function getRecordById(id: number) {
         const [financialRecord] = await db
             .select()
             .from(Records)
-            .where(eq(Records.id, id));
+            .where(and(eq(Records.id, id), isNull(Records.deletedAt)));
         return financialRecord;
     } catch (error) {
         console.log("Error fetching record", error);
@@ -60,7 +60,10 @@ export async function getRecordById(id: number) {
 export async function deleteRecord(id: number) {
     try {
         const [financialRecord] = await db
-            .delete(Records)
+            .update(Records)
+            .set({
+                deletedAt: new Date(),
+            })
             .where(eq(Records.id, id))
             .returning();
 

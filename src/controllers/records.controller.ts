@@ -43,8 +43,7 @@ export const deleteRecord = async (req: Request, res: Response, next: NextFuncti
 
 export const all = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const userId = req.user?.id;
-        const records = await getAllRecordsService(userId!);
+        const records = await getAllRecordsService();
         res.status(200).json({
             success: true,
             message: "Records fetched successfully",
