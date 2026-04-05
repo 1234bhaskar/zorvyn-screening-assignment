@@ -1,8 +1,10 @@
 import { db } from "../db/index.db.js";
 import { Users, Roles, Records } from "../db/schema.js";
-import { and, eq, isNull } from "drizzle-orm";
-import type { CreateNewRecordInput, UpdateRecordInput } from "../validators/records.validator.js";
+import { and, count, eq, isNull } from "drizzle-orm";
+import type { CreateNewRecordInput, FilterInput, UpdateRecordInput } from "../validators/records.validator.js";
 import { ConflictError, NotFoundError } from "../utils/errors/app.error.js";
+import type { IPaginatedResult, RecordRow } from "../interface/records.interface.js";
+import { buildFilterConditions } from "../utils/filters.js";
 
 export async function createRecord(data: CreateNewRecordInput, userId: number) {
     try {
@@ -42,6 +44,50 @@ export async function getAllRecords() {
         throw error;
     }
 }
+
+
+export const getFilteredRecords = async (
+    filters: FilterInput
+): Promise<IPaginatedResult<RecordRow>> => {
+
+    const conditions = buildFilterConditions(filters);
+    const whereClause = and(...conditions);
+    const offset = (filters.page - 1) * filters.limit;
+
+    const [records, [{ total } = { total: 0 }]] = await Promise.all([
+        db
+            .select({
+                id: Records.id,
+                amount: Records.amount,
+                type: Records.type,
+                category: Records.category,
+                date: Records.date,
+                notes: Records.notes,
+                createdAt: Records.createdAt,
+            })
+            .from(Records)
+            .where(whereClause)
+            .limit(filters.limit)
+            .offset(offset),
+
+        db
+            .select({ total: count() })
+            .from(Records)
+            .where(whereClause),
+    ]);
+
+    const totalNum = Number(total);
+
+    return {
+        data: records,
+        meta: {
+            total: totalNum,
+            page: filters.page,
+            limit: filters.limit,
+            totalPages: Math.ceil(totalNum / filters.limit),
+        },
+    };
+};
 
 export async function getRecordById(id: number) {
     try {

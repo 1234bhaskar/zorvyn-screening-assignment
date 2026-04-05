@@ -1,8 +1,8 @@
 import express from "express"
-import { validateRequestBody } from "../validators/index.js";
+import { validateQueryParams, validateRequestBody } from "../validators/index.js";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import { hasRole } from "../middlewares/auth.middleware.js";
-import { createNewRecordSchema, updateRecordSchema } from "../validators/records.validator.js";
+import { createNewRecordSchema, filterSchema, updateRecordSchema } from "../validators/records.validator.js";
 import { all, create, update, deleteRecord } from "../controllers/records.controller.js";
 
 const recordRouter = express.Router();
@@ -26,6 +26,7 @@ recordRouter.delete('/:id',
 recordRouter.get('/',
     isAuthenticated,
     hasRole("admin", "analyst", "viewer"),
+    validateQueryParams(filterSchema),
     all);
 
 export { recordRouter };

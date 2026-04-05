@@ -1,4 +1,4 @@
-import { boolean, date, integer, numeric, pgEnum, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, date, index, integer, numeric, pgEnum, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 export const Roles = pgTable('roles_table', {
     id: serial('id').primaryKey(),
@@ -44,7 +44,13 @@ export const Records = pgTable('records', {
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+},
+    (table) => [
+        index("idx_records_type_date").on(table.type, table.date),
+        index("idx_records_category_date").on(table.category, table.date),
+        index("idx_records_full_filter").on(table.date, table.category, table.type, table.deletedAt),
+    ]
+);
 
 export type InsertUser = typeof Users.$inferInsert;
 export type SelectUser = typeof Users.$inferSelect;

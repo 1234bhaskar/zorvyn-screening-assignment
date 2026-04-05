@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { addNewRecordService, deleteRecordService, getAllRecordsService, updateRecordService } from "../services/records.service.js";
+import { filterSchema, type FilterInput } from "../validators/records.validator.js";
 
 export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -43,11 +44,11 @@ export const deleteRecord = async (req: Request, res: Response, next: NextFuncti
 
 export const all = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const records = await getAllRecordsService();
+        const result = await getAllRecordsService(filterSchema.parse(req.query))
         res.status(200).json({
             success: true,
             message: "Records fetched successfully",
-            data: records
+            data: result
         });
     } catch (error) {
         next(error)

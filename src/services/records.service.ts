@@ -1,7 +1,9 @@
-import type { CreateNewRecordInput, UpdateRecordInput } from "../validators/records.validator.js";
-import { createRecord, deleteRecord, getAllRecords, getRecordById, updateRecord } from "../repositories/records.repository.js";
+import type { CreateNewRecordInput, FilterInput, UpdateRecordInput } from "../validators/records.validator.js";
+import { createRecord, deleteRecord, getAllRecords, getFilteredRecords, getRecordById, updateRecord } from "../repositories/records.repository.js";
 import { getUserById } from "../repositories/user.repository.js";
 import { NotFoundError } from "../utils/errors/app.error.js";
+import { buildFilterConditions } from "../utils/filters.js";
+import { and } from "drizzle-orm";
 
 export const addNewRecordService = async (data: CreateNewRecordInput, userId: number) => {
     const user = await getUserById(userId);
@@ -27,7 +29,7 @@ export const deleteRecordService = async (id: number) => {
     return deletedRecord;
 }
 
-export const getAllRecordsService = async () => {
-    const record = await getAllRecords();
+export const getAllRecordsService = async (filters: FilterInput) => {
+    const record = await getFilteredRecords(filters);
     return record;
 }
