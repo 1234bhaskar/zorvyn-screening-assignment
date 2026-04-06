@@ -1,6 +1,6 @@
 import type { CreateNewUserInput } from "../validators/user/user.validator.js";
 import { findUserByEmail } from "../repositories/user.repository.js";
-import { NotFoundError, UnauthorizedError } from "../utils/errors/app.error.js";
+import { ForbiddenError, NotFoundError, UnauthorizedError } from "../utils/errors/app.error.js";
 import { getRole } from "../repositories/role.repository.js";
 import { hashPassword } from "../utils/password.js";
 import { createUser } from "../repositories/user.repository.js";
@@ -28,6 +28,9 @@ export const loginUserService = async (data: LoginUserInput) => {
     const user = await findUserByEmail(data.email);
     if (!user) {
         throw new UnauthorizedError("Invalid credentials");
+    }
+    if (user.users_table.isActive === false) {
+        throw new ForbiddenError("Your account is inactive. Please contact the administrator.");
     }
     const isPasswordValid = await comparePassword(data.password, user.users_table.password);
     if (!isPasswordValid) {
