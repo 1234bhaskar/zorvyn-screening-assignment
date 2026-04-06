@@ -4,28 +4,29 @@ import { isAuthenticated } from "../middlewares/auth.middleware.js";
 import { hasRole } from "../middlewares/auth.middleware.js";
 import { createNewRecordSchema, filterSchema, updateRecordSchema } from "../validators/records.validator.js";
 import { all, create, update, deleteRecord } from "../controllers/records.controller.js";
+import { ROLES } from "../constant/role.js";
 
 const recordRouter = express.Router();
 recordRouter.post('/',
     isAuthenticated,
-    hasRole("admin"),
+    hasRole(ROLES.Admin),
     validateRequestBody(createNewRecordSchema),
     create);
 
 recordRouter.put('/:id',
     isAuthenticated,
-    hasRole("admin"),
+    hasRole(ROLES.Admin),
     validateRequestBody(updateRecordSchema),
     update);
 
 recordRouter.delete('/:id',
     isAuthenticated,
-    hasRole("admin"),
+    hasRole(ROLES.Admin),
     deleteRecord);
 
 recordRouter.get('/',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole(ROLES.Admin, ROLES.Analyst),
     validateQueryParams(filterSchema),
     all);
 

@@ -9,7 +9,7 @@ interface AccessTokenPayload {
 }
 
 export function generateAccessToken(payload: AccessTokenPayload) {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" });
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "60m" });
 }
 
 export function verifyToken(token: string) {

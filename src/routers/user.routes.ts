@@ -4,6 +4,7 @@ import { assignRole, profile, updateStatus } from "../controllers/user.controlle
 import { validateRequestBody } from "../validators/index.js";
 import { updateStatusSchema } from "../validators/user/user.validator.js";
 import { assignRoleSchema } from "../validators/role.validator.js";
+import { ROLES } from "../constant/role.js";
 
 const userRouter = express.Router();
 
@@ -13,13 +14,13 @@ userRouter.get('/my-profile', isAuthenticated, profile)
 //activate or deactivate user
 userRouter.put('/:id/status',
     isAuthenticated,
-    hasRole("admin"),
+    hasRole(ROLES.Admin),
     validateRequestBody(updateStatusSchema),
     updateStatus)
 
 userRouter.put('/:uuid/role',
     isAuthenticated,
-    hasRole("admin"),
+    hasRole(ROLES.Admin),
     validateRequestBody(assignRoleSchema),
     assignRole)
 

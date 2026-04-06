@@ -6,6 +6,7 @@ import {
     recentActivity,
     weeklyTrends
 } from "../controllers/dashboard.controller.js";
+import { ROLES } from "../constant/role.js";
 
 
 const dashboardRouter = express.Router();
@@ -13,22 +14,22 @@ const dashboardRouter = express.Router();
 
 dashboardRouter.get('/summary',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole(ROLES.Admin, ROLES.Analyst, ROLES.Viewer),
     summary)
 
 dashboardRouter.get('/category',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole(ROLES.Admin, ROLES.Analyst, ROLES.Viewer),
     categoryTotals)
 
 dashboardRouter.get('/recent',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole(ROLES.Admin, ROLES.Analyst, ROLES.Viewer),
     recentActivity)
 
 dashboardRouter.get('/weekly-trends',
     isAuthenticated,
-    hasRole("admin", "analyst", "viewer"),
+    hasRole(ROLES.Admin, ROLES.Analyst, ROLES.Viewer),
     weeklyTrends)
 
 
